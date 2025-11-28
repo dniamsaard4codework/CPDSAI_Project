@@ -1,5 +1,25 @@
 # Water Level Prediction at Krungthep Bridge (CPY015 Station)
 
+## Quick Start
+
+**Run the Web Application**:
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run Streamlit app
+streamlit run app.py
+```
+
+**Train Models** (execute notebooks in order):
+1. `data_acquisition.ipynb` - Collect and process data
+2. `eda.ipynb` - Exploratory analysis and feature engineering  
+3. `modelling.ipynb` - Train and evaluate models
+
+**Best Model Performance**: LSTM achieves **MAE = 0.1187 m** and **R² = 0.9438** for 24-hour ahead predictions.
+
+---
+
 ## 1. Introduction
 
 ### 1.1 Background of Work
@@ -551,10 +571,53 @@ Raw Data (CSV files in datasets/)
 
 ### 6.4 App Implementation and Deployment
 
-**Note**: Currently, the project focuses on model development and evaluation. Deployment components (web app, API) can be added as future work.
+**Streamlit Web Application** (`app.py`):
+A fully functional real-time water level monitoring dashboard has been implemented with the following features:
 
-**Potential Deployment Options**:
-1. **Streamlit Dashboard**: Interactive web app for real-time predictions
+1. **Real-Time Monitoring**:
+   - Current water level display with gauge visualization
+   - 24-hour ahead predictions using trained models
+   - Risk level assessment (Low/Medium/High/Critical)
+   - Weather conditions integration
+
+2. **Model Selection**:
+   - Support for multiple models (LightGBM, LSTM)
+   - Easy switching between models via sidebar
+   - Model performance indicators
+
+3. **Visualizations**:
+   - Interactive gauge charts for current and predicted levels
+   - Time series plots showing past 24h and forecast 24h
+   - Weather forecast charts (rainfall, temperature)
+   - Bank level and safety threshold indicators
+
+4. **Data Integration**:
+   - Real-time weather data from Open-Meteo API
+   - River discharge data from Open-Meteo Flood API
+   - Historical data integration for context
+   - Fallback to simulated data when APIs unavailable
+
+5. **Features**:
+   - Automatic data refresh
+   - Responsive design with sidebar controls
+   - Risk level color coding
+   - Water level change indicators (rise/drop/stable)
+
+**How to Run the Application**:
+```bash
+# Install dependencies (if not already installed)
+pip install -r requirements.txt
+# or using uv
+uv pip install -r requirements.txt
+
+# Run the Streamlit app
+streamlit run app.py
+```
+
+The application will open in your default web browser at `http://localhost:8501`
+
+**Future Deployment Options**:
+1. **Cloud Deployment**: Deploy to Streamlit Cloud, Heroku, or AWS
 2. **REST API**: Flask/FastAPI backend for integration with existing systems
 3. **Scheduled Predictions**: Automated daily/hourly predictions with alerts
 4. **Mobile App**: Integration with disaster warning mobile applications
@@ -748,6 +811,7 @@ This project successfully developed a machine learning system for predicting wat
 - **Hyperparameter Tuning**: Systematic LSTM hyperparameter search (96 combinations tested)
 - **Error Analysis**: Comprehensive error analysis across temporal, magnitude, and weather dimensions
 - **Practical Application**: Focus on actionable 24-hour ahead predictions for flood management
+- **Web Application**: Fully functional Streamlit dashboard for real-time monitoring and predictions
 
 **Main Results**:
 The tuned LSTM model (sequence_length=48, hidden_size=128, dropout=0.3) outperformed all other approaches, demonstrating the value of deep learning for capturing complex temporal patterns in hydrological time series. The model successfully integrates multiple data sources (water levels, weather, river discharge) and 30+ engineered features to provide accurate predictions. The model achieves 95.59% of predictions within ±0.3 m error, making it highly suitable for practical flood warning applications.
@@ -795,9 +859,10 @@ The tuned LSTM model (sequence_length=48, hidden_size=128, dropout=0.3) outperfo
    - Weather forecast integration (not just historical)
 
 3. **Deployment**:
-   - Develop Streamlit web dashboard
+   - ✅ Streamlit web dashboard (completed)
    - Create REST API for real-time predictions
    - Implement automated retraining pipeline
+   - Deploy to cloud (Streamlit Cloud, AWS, etc.)
    - Build mobile app integration
 
 4. **Evaluation**:
@@ -869,6 +934,7 @@ The tuned LSTM model (sequence_length=48, hidden_size=128, dropout=0.3) outperfo
 
 ```
 CPDSAI_Project/
+├── app.py                          # Streamlit web application for real-time monitoring
 ├── data_acquisition.ipynb          # Data collection, cleaning, and API integration
 ├── eda.ipynb                       # Exploratory data analysis and feature engineering
 ├── modelling.ipynb                 # Model training, evaluation, and comparison
@@ -878,15 +944,96 @@ CPDSAI_Project/
 │   └── metadata/                  # Station metadata files
 ├── models/                         # Saved model files
 │   ├── lstm_hourly_model_cv.pth   # Best LSTM model (tuned, with CV)
+│   ├── lstm_hourly_model.pth      # LSTM model (alternative)
 │   ├── xgboost_model_cv.pkl       # XGBoost model (if saved)
 │   └── lightgbm_model_cv.pkl      # LightGBM model (if saved)
 ├── full_merged.csv                 # Processed hourly data (16 features)
 ├── full_merged_daily.csv           # Processed daily data (18 features)
 ├── full_merged_featured.csv        # Hourly data with engineered features (46 features)
 ├── full_merged_daily_featured.csv  # Daily data with engineered features (41 features)
-├── pyproject.toml                  # Project dependencies
+├── pyproject.toml                  # Project dependencies (uv/pip)
+├── requirements.txt                # Python dependencies list
 └── README.md                       # This file
 ```
+
+---
+
+## 10. Installation and Usage
+
+### 10.1 Prerequisites
+
+- Python 3.13 or higher
+- pip or uv package manager
+- GPU (optional, for faster LSTM training)
+
+### 10.2 Installation
+
+**Option 1: Using pip**
+```bash
+pip install -r requirements.txt
+```
+
+**Option 2: Using uv (recommended)**
+```bash
+uv pip install -r requirements.txt
+```
+
+**Option 3: Using pyproject.toml (uv)**
+```bash
+uv sync
+```
+
+### 10.3 Running the Notebooks
+
+Execute the notebooks in the following order:
+
+1. **Data Acquisition**:
+   ```bash
+   jupyter notebook data_acquisition.ipynb
+   ```
+   - Collects and processes raw water level data
+   - Fetches meteorological and river discharge data
+   - Outputs: `full_merged.csv`, `full_merged_daily.csv`
+
+2. **Exploratory Data Analysis**:
+   ```bash
+   jupyter notebook eda.ipynb
+   ```
+   - Performs comprehensive data analysis
+   - Creates engineered features
+   - Outputs: `full_merged_featured.csv`, `full_merged_daily_featured.csv`
+
+3. **Model Training**:
+   ```bash
+   jupyter notebook modelling.ipynb
+   ```
+   - Trains and evaluates multiple models
+   - Performs hyperparameter tuning
+   - Saves best models to `models/` directory
+
+### 10.4 Running the Web Application
+
+**Start the Streamlit app**:
+```bash
+streamlit run app.py
+```
+
+The application will:
+- Load trained models from `models/` directory
+- Fetch real-time weather data from Open-Meteo API
+- Display current water level and 24-hour predictions
+- Show interactive visualizations and risk assessments
+
+**Note**: Ensure that model files (`lightgbm_model_cv.pkl` and/or `lstm_hourly_model_cv.pth`) exist in the `models/` directory before running the app.
+
+### 10.5 Key Dependencies
+
+- **Data Processing**: pandas, numpy
+- **Machine Learning**: scikit-learn, xgboost, lightgbm
+- **Deep Learning**: torch (PyTorch)
+- **Visualization**: matplotlib, seaborn, plotly
+- **Web App**: streamlit
+- **API Integration**: requests
 
 ---
 
