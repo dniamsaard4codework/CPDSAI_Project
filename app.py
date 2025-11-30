@@ -13,23 +13,8 @@ import requests
 from datetime import datetime, timedelta
 import plotly.graph_objects as go
 import warnings
-import re
-from bs4 import BeautifulSoup
-import json
 
 warnings.filterwarnings("ignore")
-
-# Optional Selenium import for JavaScript-rendered content
-try:
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-
-    SELENIUM_AVAILABLE = True
-except ImportError:
-    SELENIUM_AVAILABLE = False
 
 # Optional PyTorch import for LSTM
 try:
@@ -53,170 +38,402 @@ st.set_page_config(
     },
 )
 
-# Custom CSS for professional loft-style design
+# Custom CSS for Nothing.tech Inspired Design
 st.markdown(
     """
 <style>
-    /* Nothing.tech Inspired Design - Raw, Industrial, Monochrome */
-    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Ndot+55:wght@500&display=swap'); /* Simulated dot matrix if available, fallback to Mono */
+    /* Nothing.tech Design System - Pure Monochrome + Red Accent */
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 
     :root {
-        --bg-color: #000000;
-        --surface-color: #0a0a0a;
-        --text-color: #E6E6E6;
-        --text-dim: #888888;
-        --accent-color: #D71921; /* Nothing Red */
-        --border-color: #333333;
-        --grid-color: #222222;
+        --nothing-black: #000000;
+        --nothing-dark: #0A0A0A;
+        --nothing-gray-dark: #1A1A1A;
+        --nothing-gray: #333333;
+        --nothing-gray-light: #666666;
+        --nothing-gray-lighter: #888888;
+        --nothing-white: #FFFFFF;
+        --nothing-red: #D71921;
+        --nothing-red-dim: rgba(215, 25, 33, 0.15);
     }
 
     /* Global Reset */
-    html, body, [class*="css"] {
-        font-family: 'Roboto Mono', monospace;
-        background-color: var(--bg-color);
-        color: var(--text-color);
+    html, body, [class*="css"], .stApp {
+        font-family: 'Space Mono', monospace !important;
+        background-color: var(--nothing-black) !important;
+        color: var(--nothing-white);
     }
 
+    /* Hide Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+
     /* Main Container */
-    .main {
-        background-color: var(--bg-color);
-        background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
-        background-size: 20px 20px;
-        padding: 2rem;
+    .main .block-container {
+        background-color: var(--nothing-black);
+        padding: 1rem 2rem 2rem 2rem;
+        max-width: 1400px;
+    }
+
+    /* Dot Grid Background */
+    .stApp > div:first-child {
+        background-image: radial-gradient(circle, var(--nothing-gray) 1px, transparent 1px);
+        background-size: 24px 24px;
     }
 
     /* Typography */
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Roboto Mono', monospace;
+    h1, h2, h3, h4, h5, h6, p, span, div {
+        font-family: 'Space Mono', monospace !important;
+    }
+
+    h1, h2, h3 {
         text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 500;
-        color: var(--text-color);
+        letter-spacing: 2px;
+        font-weight: 700;
     }
 
-    h1 {
-        font-size: 2.5rem;
-        border-bottom: 2px solid var(--accent-color);
-        padding-bottom: 0.5rem;
-        display: inline-block;
-    }
-
-    /* Cards */
-    .metric-card {
-        background: rgba(10, 10, 10, 0.8);
-        border: 1px solid var(--border-color);
+    /* Nothing Style Cards */
+    .nothing-card {
+        background: var(--nothing-dark);
+        border: 1px solid var(--nothing-gray);
         padding: 1.5rem;
-        border-radius: 0; /* Sharp corners */
         position: relative;
-        backdrop-filter: blur(10px);
-        transition: all 0.2s ease;
+        transition: all 0.15s ease;
     }
 
-    .metric-card::before {
+    .nothing-card:hover {
+        border-color: var(--nothing-white);
+        box-shadow: 4px 4px 0 var(--nothing-red);
+        transform: translate(-2px, -2px);
+    }
+
+    .nothing-card::after {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 10px,
-            rgba(255, 255, 255, 0.02) 10px,
-            rgba(255, 255, 255, 0.02) 20px
-        );
-        pointer-events: none;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--nothing-red);
     }
 
-    .metric-card:hover {
-        border-color: var(--text-color);
-        transform: translate(-2px, -2px);
-        box-shadow: 4px 4px 0 var(--accent-color);
+    /* Header Container */
+    .nothing-header {
+        border: 1px solid var(--nothing-gray);
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        background: var(--nothing-black);
+        position: relative;
     }
 
-    /* Sidebar */
+    .nothing-header::before {
+        content: '( )';
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 1.5rem;
+        color: var(--nothing-red);
+        font-weight: 700;
+    }
+
+    /* Sidebar Styling */
     [data-testid="stSidebar"] {
-        background-color: var(--bg-color);
-        border-right: 1px solid var(--border-color);
+        background-color: var(--nothing-black) !important;
+        border-right: 1px solid var(--nothing-gray);
+    }
+
+    [data-testid="stSidebar"] > div:first-child {
+        background-color: var(--nothing-black) !important;
+    }
+
+    /* Input Fields */
+    .stNumberInput > div > div > input {
+        background-color: var(--nothing-dark) !important;
+        border: 1px solid var(--nothing-gray) !important;
+        color: var(--nothing-white) !important;
+        font-family: 'Space Mono', monospace !important;
+    }
+
+    .stNumberInput > div > div > input:focus {
+        border-color: var(--nothing-red) !important;
+        box-shadow: 0 0 0 1px var(--nothing-red) !important;
     }
 
     /* Buttons */
     .stButton > button {
-        background: transparent;
-        color: var(--text-color);
-        border: 1px solid var(--text-color);
-        border-radius: 20px;
-        padding: 0.5rem 1.5rem;
-        font-family: 'Roboto Mono', monospace;
-        text-transform: uppercase;
-        transition: all 0.2s;
+        background: transparent !important;
+        color: var(--nothing-white) !important;
+        border: 1px solid var(--nothing-white) !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 2rem !important;
+        font-family: 'Space Mono', monospace !important;
+        text-transform: uppercase !important;
+        letter-spacing: 2px !important;
+        font-weight: 700 !important;
+        transition: all 0.15s ease !important;
     }
 
     .stButton > button:hover {
-        background: var(--accent-color);
-        border-color: var(--accent-color);
-        color: white;
+        background: var(--nothing-red) !important;
+        border-color: var(--nothing-red) !important;
+        color: var(--nothing-white) !important;
+        box-shadow: 4px 4px 0 var(--nothing-white) !important;
+        transform: translate(-2px, -2px) !important;
     }
 
-    /* Charts */
-    .js-plotly-plot {
-        border: 1px solid var(--border-color);
-        background: var(--bg-color);
-        padding: 1rem;
+    /* Metric Display */
+    .nothing-metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px dashed var(--nothing-gray);
     }
 
-    /* Custom Header */
-    .header-container {
-        border: 1px solid var(--border-color);
-        padding: 2rem;
-        margin-bottom: 2rem;
-        background: var(--bg-color);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .header-title {
-        font-size: 3rem;
-        font-weight: 700;
+    .nothing-metric-label {
+        color: var(--nothing-gray-lighter);
+        font-size: 0.85rem;
         text-transform: uppercase;
-        letter-spacing: -2px;
+        letter-spacing: 1px;
+    }
+
+    .nothing-metric-value {
+        color: var(--nothing-white);
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    /* Section Headers */
+    .nothing-section {
+        background: var(--nothing-black);
+        border: 1px solid var(--nothing-gray);
+        padding: 1rem 1.5rem;
+        margin: 2rem 0 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .nothing-section::before {
+        content: '//';
+        color: var(--nothing-red);
+        font-weight: 700;
+    }
+
+    .nothing-section::after {
+        content: '//';
+        color: var(--nothing-red);
+        font-weight: 700;
+    }
+
+    /* Status Indicators */
+    .nothing-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border: 1px solid var(--nothing-gray);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .nothing-status::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--nothing-red);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
+    /* Risk Level Styles */
+    .risk-critical { border-color: var(--nothing-red) !important; color: var(--nothing-red) !important; }
+    .risk-high { border-color: #FF6B00 !important; color: #FF6B00 !important; }
+    .risk-medium { border-color: #FFB800 !important; color: #FFB800 !important; }
+    .risk-low { border-color: #00FF88 !important; color: #00FF88 !important; }
+
+    /* Dividers */
+    hr {
+        border: none;
+        border-top: 1px dashed var(--nothing-gray);
+        margin: 1.5rem 0;
+    }
+
+    /* Sidebar Styling */
+    .nothing-sidebar-header {
+        background: var(--nothing-black);
+        border: 1px solid var(--nothing-gray);
+        padding: 1rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .nothing-sidebar-header span {
+        color: var(--nothing-white);
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+    }
+
+    .nothing-sidebar-section {
+        border-top: 1px solid var(--nothing-gray);
+        border-bottom: 1px solid var(--nothing-gray);
+        padding: 0.5rem 0;
+        margin: 1rem 0 0.5rem 0;
+        text-align: center;
+    }
+
+    .nothing-sidebar-section span {
+        color: var(--nothing-gray-light);
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        font-weight: 600;
+    }
+
+    .nothing-time-display {
+        border: 1px solid var(--nothing-gray);
+        padding: 1rem;
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+
+    .nothing-time-label {
+        font-size: 0.6rem;
+        color: var(--nothing-gray-light);
+        letter-spacing: 2px;
+        margin-bottom: 0.3rem;
+    }
+
+    .nothing-time-date {
+        font-size: 0.85rem;
+        color: var(--nothing-gray-light);
+        margin-bottom: 0.2rem;
+    }
+
+    .nothing-time-hour {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--nothing-red);
         line-height: 1;
     }
 
-    .header-subtitle {
-        color: var(--accent-color);
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-top: 0.5rem;
+    .nothing-time-zone {
+        font-size: 0.55rem;
+        color: var(--nothing-gray);
+        letter-spacing: 1px;
+        margin-top: 0.3rem;
     }
 
-    /* Status Badges */
-    .status-badge {
-        background: transparent;
-        border: 1px solid var(--text-color);
-        color: var(--text-color);
-        padding: 0.2rem 0.8rem;
-        border-radius: 12px;
+    .nothing-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .nothing-info-item {
+        border: 1px dotted var(--nothing-gray);
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    .nothing-info-label {
+        display: block;
+        font-size: 0.55rem;
+        color: var(--nothing-gray);
+        letter-spacing: 1px;
+        margin-bottom: 0.2rem;
+    }
+
+    .nothing-info-value {
+        display: block;
         font-size: 0.8rem;
-        text-transform: uppercase;
+        color: var(--nothing-white);
+        font-weight: 600;
     }
 
-    /* Alerts */
-    .stAlert {
-        background: var(--bg-color);
-        color: var(--text-color);
-        border: 1px solid var(--border-color);
-        border-left: 4px solid var(--accent-color);
+    .nothing-model-status {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid var(--nothing-gray);
     }
-    
-    /* Inputs */
-    .stSelectbox > div > div {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        border-color: var(--border-color);
+
+    .nothing-model-indicator {
+        width: 8px;
+        height: 8px;
+        background: var(--nothing-red);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
+    .nothing-model-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nothing-model-name {
+        font-size: 0.9rem;
+        color: var(--nothing-white);
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .nothing-model-type {
+        font-size: 0.55rem;
+        color: var(--nothing-gray);
+        letter-spacing: 1px;
+    }
+
+    /* Footer */
+    .nothing-footer {
+        border: 1px solid var(--nothing-gray);
+        padding: 2rem;
+        margin-top: 3rem;
+        text-align: center;
+        background: var(--nothing-dark);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--nothing-black);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--nothing-gray);
+        border: 1px solid var(--nothing-gray-dark);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--nothing-red);
+    }
+
+    /* Remove default Streamlit spacing */
+    .element-container {
+        margin: 0 !important;
+    }
+
+    /* Plotly Chart Styling */
+    .js-plotly-plot {
+        border: 1px solid var(--nothing-gray) !important;
     }
 </style>
 """,
@@ -314,430 +531,25 @@ def fetch_current_weather():
         return None
 
 
-@st.cache_data(ttl=300)  # Cache for 5 minutes (shorter for real-time data)
-def fetch_water_level_thaiwater():
+def get_manual_water_level_input():
     """
-    Scrape real-time water level data from Thai Water website graph
-    Source: https://www.thaiwater.net/water/wl
+    Get water level inputs manually from user via Streamlit sidebar
     Station: สถานีสะพานกรุงเทพ (Krungthep Bridge Station)
-
-    The website displays data in graph format, so we need to extract from:
-    - JavaScript variables containing chart data
-    - JSON data embedded in script tags
-    - API endpoints called by the graph
-    - Chart library data structures (Chart.js, Highcharts, Plotly, etc.)
-    - Selenium for JavaScript-rendered content (if available)
+    
+    Returns dict with water level values at different time points
     """
-
-    try:
-        url = "https://www.thaiwater.net/water/wl"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Accept-Language": "th-TH,th;q=0.9,en-US;q=0.8,en;q=0.7",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
-            "Upgrade-Insecure-Requests": "1",
-        }
-
-        response = requests.get(url, headers=headers, timeout=15)
-        response.raise_for_status()
-        response.encoding = "utf-8"
-
-        html_content = response.text
-        soup = BeautifulSoup(html_content, "html.parser")
-
-        station_names = ["สะพานกรุงเทพ", "Krungthep", "CPY015", "กรุงเทพ", "CPY015"]
-        water_level = None
-        measure_time = None
-
-        # Method 1: Search for JSON data in script tags
-        script_tags = soup.find_all("script")
-        for script in script_tags:
-            script_text = script.string
-            if not script_text:
-                continue
-
-            # Look for JSON objects containing station data
-            # Common patterns: var data = {...}, data: {...}, series: [...]
-            json_patterns = [
-                r"var\s+\w*[Dd]ata\w*\s*=\s*(\{.*?\});",
-                r"data\s*:\s*(\{.*?\})",
-                r"series\s*:\s*(\[.*?\])",
-                r"chartData\s*=\s*(\{.*?\});",
-                r"dataset\s*=\s*(\{.*?\});",
-            ]
-
-            for pattern in json_patterns:
-                matches = re.finditer(pattern, script_text, re.DOTALL)
-                for match in matches:
-                    try:
-                        json_str = match.group(1)
-                        # Try to parse as JSON
-                        data = json.loads(json_str)
-                        # Recursively search for station name and water level
-                        result = _extract_from_json(data, station_names)
-                        if result:
-                            water_level = result.get("water_level")
-                            measure_time = result.get("time")
-                            if water_level is not None:
-                                break
-                    except (json.JSONDecodeError, AttributeError):
-                        continue
-                if water_level is not None:
-                    break
-
-            # Method 1b: Look for JavaScript arrays with data
-            # Pattern: [["time", value], ["time", value], ...]
-            array_pattern = r"\[\[.*?\]\s*,\s*\[.*?\]\s*\]"
-            arrays = re.findall(array_pattern, script_text)
-            for arr_str in arrays:
-                try:
-                    # Try to parse as JSON array
-                    arr = json.loads(arr_str)
-                    if isinstance(arr, list) and len(arr) > 0:
-                        # Get the last (most recent) data point
-                        last_point = arr[-1]
-                        if (
-                            isinstance(last_point, (list, tuple))
-                            and len(last_point) >= 2
-                        ):
-                            # Check if this might be our station
-                            point_str = str(last_point).lower()
-                            if (
-                                any(name.lower() in point_str for name in station_names)
-                                or len(arr) > 0
-                            ):
-                                # Try to extract numeric value
-                                for item in last_point:
-                                    if isinstance(item, (int, float)):
-                                        if -20 <= item <= 5:
-                                            water_level = float(item)
-                                            break
-                                    elif isinstance(item, str):
-                                        num_match = re.search(r"-?\d+\.?\d*", item)
-                                        if num_match:
-                                            num = float(num_match.group())
-                                            if -20 <= num <= 5:
-                                                water_level = num
-                                                break
-                except (json.JSONDecodeError, ValueError, IndexError):
-                    continue
-                if water_level is not None:
-                    break
-
-            # Method 1c: Look for JavaScript variables with station code CPY015
-            # Pattern: CPY015: {...} or "CPY015": {...}
-            cpy015_patterns = [
-                r"CPY015\s*[:=]\s*(\{.*?\})",
-                r'"CPY015"\s*:\s*(\{.*?\})',
-                r"'CPY015'\s*:\s*(\{.*?\})",
-            ]
-            for pattern in cpy015_patterns:
-                matches = re.finditer(pattern, script_text, re.DOTALL)
-                for match in matches:
-                    try:
-                        json_str = match.group(1)
-                        data = json.loads(json_str)
-                        # Look for water level value
-                        if isinstance(data, dict):
-                            for key, value in data.items():
-                                if (
-                                    "level" in key.lower()
-                                    or "water" in key.lower()
-                                    or "value" in key.lower()
-                                ):
-                                    if (
-                                        isinstance(value, (int, float))
-                                        and -20 <= value <= 5
-                                    ):
-                                        water_level = float(value)
-                                        break
-                                elif (
-                                    isinstance(value, (int, float))
-                                    and -20 <= value <= 5
-                                ):
-                                    water_level = float(value)
-                                    break
-                    except (json.JSONDecodeError, AttributeError):
-                        continue
-                if water_level is not None:
-                    break
-
-            if water_level is not None:
-                break
-
-        # Method 2: Search for API endpoints in script tags
-        if water_level is None:
-            for script in script_tags:
-                script_text = script.string
-                if not script_text:
-                    continue
-
-                # Look for API URLs
-                api_patterns = [
-                    r'["\']([^"\']*api[^"\']*water[^"\']*)["\']',
-                    r'["\']([^"\']*api[^"\']*wl[^"\']*)["\']',
-                    r'["\']([^"\']*api[^"\']*station[^"\']*)["\']',
-                    r'fetch\s*\(["\']([^"\']+)["\']',
-                    r'ajax\s*\(["\']([^"\']+)["\']',
-                    r'\.get\s*\(["\']([^"\']+)["\']',
-                ]
-
-                for pattern in api_patterns:
-                    matches = re.finditer(pattern, script_text, re.IGNORECASE)
-                    for match in matches:
-                        api_url = match.group(1)
-                        # Try to fetch from API
-                        if not api_url.startswith("http"):
-                            # Relative URL
-                            if api_url.startswith("/"):
-                                api_url = "https://www.thaiwater.net" + api_url
-                            else:
-                                api_url = "https://www.thaiwater.net/" + api_url
-
-                        try:
-                            api_response = requests.get(
-                                api_url, headers=headers, timeout=10
-                            )
-                            if api_response.status_code == 200:
-                                api_data = api_response.json()
-                                result = _extract_from_json(api_data, station_names)
-                                if result and result.get("water_level"):
-                                    water_level = result.get("water_level")
-                                    measure_time = result.get("time")
-                                    break
-                        except:
-                            continue
-                    if water_level is not None:
-                        break
-                if water_level is not None:
-                    break
-
-        # Method 3: Look for data attributes in HTML elements (for chart libraries)
-        if water_level is None:
-            # Chart.js data attributes
-            chart_elements = (
-                soup.find_all(attrs={"data-chart": True})
-                + soup.find_all(attrs={"data-series": True})
-                + soup.find_all(attrs={"data-values": True})
-            )
-
-            for elem in chart_elements:
-                data_attr = (
-                    elem.get("data-chart")
-                    or elem.get("data-series")
-                    or elem.get("data-values")
-                )
-                try:
-                    data = json.loads(data_attr)
-                    result = _extract_from_json(data, station_names)
-                    if result and result.get("water_level"):
-                        water_level = result.get("water_level")
-                        measure_time = result.get("time")
-                        break
-                except:
-                    continue
-
-        # Method 4: Search for embedded data in HTML comments or hidden divs
-        if water_level is None:
-            # Look for hidden divs with data
-            hidden_divs = soup.find_all(
-                "div", style=re.compile(r"display\s*:\s*none", re.I)
-            )
-            for div in hidden_divs:
-                div_text = div.get_text()
-                if any(name in div_text for name in station_names):
-                    numbers = re.findall(r"-?\d+\.?\d*", div_text)
-                    for num_str in numbers:
-                        try:
-                            num = float(num_str)
-                            if -20 <= num <= 5:
-                                water_level = num
-                                break
-                        except ValueError:
-                            continue
-                    if water_level is not None:
-                        break
-
-        # Method 5: Use Selenium if available (for JavaScript-rendered graphs)
-        if water_level is None and SELENIUM_AVAILABLE:
-            try:
-                chrome_options = Options()
-                chrome_options.add_argument("--headless")
-                chrome_options.add_argument("--no-sandbox")
-                chrome_options.add_argument("--disable-dev-shm-usage")
-                chrome_options.add_argument("--disable-gpu")
-                chrome_options.add_argument("--window-size=1920,1080")
-                chrome_options.add_argument(
-                    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-                )
-
-                # Try to use existing Chrome driver or system PATH
-                try:
-                    driver = webdriver.Chrome(options=chrome_options)
-                except:
-                    # If Chrome driver not found, skip Selenium
-                    driver = None
-
-                if driver:
-                    try:
-                        driver.get(url)
-                        # Wait for page to load (wait for graph to render)
-                        WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((By.TAG_NAME, "body"))
-                        )
-
-                        # Wait a bit more for JavaScript to execute
-                        import time
-
-                        time.sleep(3)
-
-                        # Get page source after JavaScript execution
-                        page_source = driver.page_source
-                        soup_js = BeautifulSoup(page_source, "html.parser")
-
-                        # Now search in the JavaScript-rendered content
-                        # Look for text content that might contain the water level
-                        page_text = soup_js.get_text()
-
-                        # Search for station name and nearby numbers
-                        for name in station_names:
-                            idx = page_text.find(name)
-                            if idx != -1:
-                                context = page_text[
-                                    max(0, idx - 300) : min(len(page_text), idx + 300)
-                                ]
-                                # Look for numbers that could be water level
-                                numbers = re.findall(r"-?\d+\.?\d*", context)
-                                for num_str in numbers:
-                                    try:
-                                        num = float(num_str)
-                                        if -20 <= num <= 5:
-                                            water_level = num
-                                            break
-                                    except ValueError:
-                                        continue
-                                if water_level is not None:
-                                    break
-
-                        # Also check for data in script tags after JS execution
-                        if water_level is None:
-                            scripts_js = soup_js.find_all("script")
-                            for script in scripts_js:
-                                script_text = script.string
-                                if script_text:
-                                    # Look for CPY015 or station name with value
-                                    for name in station_names:
-                                        if name in script_text:
-                                            # Extract numbers near station name
-                                            pattern = rf"{re.escape(name)}[^0-9]*(-?\d+\.?\d*)"
-                                            matches = re.findall(pattern, script_text)
-                                            for match in matches:
-                                                try:
-                                                    num = float(match)
-                                                    if -20 <= num <= 5:
-                                                        water_level = num
-                                                        break
-                                                except ValueError:
-                                                    continue
-                                            if water_level is not None:
-                                                break
-                                    if water_level is not None:
-                                        break
-
-                    finally:
-                        driver.quit()
-            except Exception as e:
-                # Selenium failed, continue without it
-                pass
-
-        # Parse measurement time
-        if water_level is not None:
-            if measure_time:
-                try:
-                    measure_datetime = pd.to_datetime(measure_time)
-                except:
-                    measure_datetime = datetime.now()
-            else:
-                measure_datetime = datetime.now()
-
-            return {
-                "water_level": water_level,
-                "measure_datetime": measure_datetime,
-                "source": "thaiwater.net",
-                "status": "success",
-            }
-        else:
-            return {
-                "water_level": None,
-                "measure_datetime": None,
-                "source": "thaiwater.net",
-                "status": "not_found",
-                "error": "Could not find water level data in graph. The website may use JavaScript rendering. Try installing Selenium: pip install selenium",
-            }
-
-    except requests.exceptions.RequestException as e:
+    # Check session state for manual water level inputs
+    if "water_level_now" in st.session_state:
         return {
-            "water_level": None,
-            "measure_datetime": None,
-            "source": "thaiwater.net",
-            "status": "error",
-            "error": f"Network error: {str(e)}",
+            "water_level_now": st.session_state.get("water_level_now", 0.5),
+            "water_level_1h": st.session_state.get("water_level_1h", 0.5),
+            "water_level_6h": st.session_state.get("water_level_6h", 0.5),
+            "water_level_12h": st.session_state.get("water_level_12h", 0.5),
+            "water_level_24h": st.session_state.get("water_level_24h", 0.5),
+            "measure_datetime": datetime.now(),
+            "source": "Manual Input",
+            "status": "success",
         }
-    except Exception as e:
-        return {
-            "water_level": None,
-            "measure_datetime": None,
-            "source": "thaiwater.net",
-            "status": "error",
-            "error": f"Parsing error: {str(e)}",
-        }
-
-
-def _extract_from_json(data, station_names):
-    """
-    Recursively search JSON data for station name and water level value
-    """
-    if isinstance(data, dict):
-        # Check keys for station name
-        for key, value in data.items():
-            key_str = str(key).lower()
-            # Check if key contains station name
-            if any(name.lower() in key_str for name in station_names):
-                # This might be our station data
-                if isinstance(value, dict):
-                    # Look for water level in nested dict
-                    for sub_key, sub_value in value.items():
-                        if (
-                            "level" in sub_key.lower()
-                            or "water" in sub_key.lower()
-                            or "value" in sub_key.lower()
-                        ):
-                            if (
-                                isinstance(sub_value, (int, float))
-                                and -20 <= sub_value <= 5
-                            ):
-                                return {"water_level": float(sub_value), "time": None}
-                        elif (
-                            isinstance(sub_value, (int, float))
-                            and -20 <= sub_value <= 5
-                        ):
-                            return {"water_level": float(sub_value), "time": None}
-                elif isinstance(value, (int, float)) and -20 <= value <= 5:
-                    return {"water_level": float(value), "time": None}
-
-            # Recursively search nested structures
-            result = _extract_from_json(value, station_names)
-            if result:
-                return result
-
-    elif isinstance(data, list):
-        for item in data:
-            result = _extract_from_json(item, station_names)
-            if result:
-                return result
-
     return None
 
 
@@ -866,17 +678,6 @@ def load_models():
         )
 
     return models
-
-
-@st.cache_data
-def load_historical_data():
-    """Load historical data for initial water level reference"""
-    try:
-        df = pd.read_csv("full_merged.csv", index_col=0, parse_dates=True)
-        df.index.name = "measure_datetime"
-        return df
-    except Exception:
-        return None
 
 
 def create_features(df):
@@ -1062,39 +863,39 @@ def create_gauge(value, title, min_val=-2, max_val=3):
             domain={"x": [0, 1], "y": [0, 1]},
             title={
                 "text": title.upper(),
-                "font": {"size": 14, "color": "#888888", "family": "Roboto Mono"},
+                "font": {"size": 12, "color": "#666666", "family": "Space Mono"},
             },
             number={
                 "suffix": " m",
-                "font": {"size": 36, "color": "#FFFFFF", "family": "Roboto Mono"},
+                "font": {"size": 32, "color": "#FFFFFF", "family": "Space Mono"},
             },
             delta={
                 "reference": BANK_LEVEL,
                 "position": "top",
-                "font": {"size": 12, "color": "#888888", "family": "Roboto Mono"},
+                "font": {"size": 11, "color": "#666666", "family": "Space Mono"},
             },
             gauge={
                 "axis": {
                     "range": [min_val, max_val],
                     "tickwidth": 1,
-                    "tickcolor": "#888888",
+                    "tickcolor": "#444444",
                     "tickfont": {
-                        "size": 10,
-                        "color": "#888888",
-                        "family": "Roboto Mono",
+                        "size": 9,
+                        "color": "#666666",
+                        "family": "Space Mono",
                     },
                 },
-                "bar": {"color": bar_color, "line": {"color": "black", "width": 1}},
-                "bgcolor": "rgba(0,0,0,0)",
+                "bar": {"color": bar_color, "line": {"color": "#000", "width": 2}},
+                "bgcolor": "#0A0A0A",
                 "borderwidth": 1,
                 "bordercolor": "#333333",
                 "steps": [
-                    {"range": [min_val, 0], "color": "#111111"},
-                    {"range": [0, BANK_LEVEL], "color": "#222222"},
-                    {"range": [BANK_LEVEL, max_val], "color": "#330000"},
+                    {"range": [min_val, 0], "color": "#0A0A0A"},
+                    {"range": [0, BANK_LEVEL], "color": "#1A1A1A"},
+                    {"range": [BANK_LEVEL, max_val], "color": "rgba(215,25,33,0.2)"},
                 ],
                 "threshold": {
-                    "line": {"color": "#D71921", "width": 2},
+                    "line": {"color": "#D71921", "width": 3},
                     "thickness": 1,
                     "value": BANK_LEVEL,
                 },
@@ -1102,11 +903,11 @@ def create_gauge(value, title, min_val=-2, max_val=3):
         )
     )
     fig.update_layout(
-        height=250,
-        margin=dict(l=20, r=20, t=40, b=20),
+        height=220,
+        margin=dict(l=15, r=15, t=35, b=15),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Roboto Mono"),
+        font=dict(family="Space Mono"),
     )
     return fig
 
@@ -1123,66 +924,30 @@ def present(
     selected_model_name,
 ):
     """
-    Present all UI components and visualizations
+    Present all UI components - Simplified Nothing.tech style
     """
-    # Header with modern loft design
-    # Header with Nothing.tech design
-    st.markdown(
-        """
-    <div class="header-container">
-        <div class="header-title">WATER<span style="color: #D71921">.</span>LEVEL</div>
-        <div class="header-subtitle">CPY015 // KRUNGTHEP BRIDGE</div>
-        <div style="margin-top: 1rem; font-family: 'Roboto Mono'; font-size: 0.8rem; color: #888; letter-spacing: 1px;">
-            CHAO PHRAYA RIVER // BKK // LSTM NEURAL NET
-        </div>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    pred_time = now + timedelta(hours=24)
 
-    # Main metrics row with responsive columns
-    st.markdown("### 📊 Current Status & Forecast")
-    # Responsive: stack on mobile, side-by-side on desktop
-    col1, col2, col3 = st.columns([2, 2, 1.5], gap="medium")
+    # Main metrics row - compact
+    col1, col2, col3 = st.columns([1, 1, 1], gap="small")
 
     with col1:
-        st.markdown(
-            """
-        <div class="metric-card">
-        """,
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<h4 style='margin-top: 0; color: #888; font-size: 0.9rem;'>CURRENT LEVEL</h4>",
-            unsafe_allow_html=True,
-        )
-        if isinstance(measure_time, datetime):
-            time_str = measure_time.strftime("%Y-%m-%d %H:%M")
-        else:
-            time_str = str(measure_time)
-
-        st.markdown(
-            f"<p style='color: #888; font-weight: 500; font-size: 0.8rem;'>// {time_str} ICT // {data_source.split(' ')[0].upper()}</p>",
-            unsafe_allow_html=True,
-        )
-
-        fig1 = create_gauge(current_water_level, "Current Level")
-        st.plotly_chart(
-            fig1, use_container_width=True, config={"displayModeBar": False}
-        )
+        st.markdown("<div class='nothing-card'><div style='color:#666;font-size:0.7rem;letter-spacing:2px;margin-bottom:0.3rem;'>CURRENT</div>", unsafe_allow_html=True)
+        fig1 = create_gauge(current_water_level, "")
+        st.plotly_chart(fig1, use_container_width=True, config={"displayModeBar": False})
 
         risk_label, risk_class, risk_pct = calculate_risk_level(current_water_level)
-        risk_colors = {
-            "critical": "border: 1px solid #D71921; color: #D71921;",
-            "high": "border: 1px solid #FF9800; color: #FF9800;",
-            "medium": "border: 1px solid #FBBC04; color: #FBBC04;",
-            "low": "border: 1px solid #34A853; color: #34A853;",
+        risk_styles = {
+            "critical": "border-color: #D71921; color: #D71921;",
+            "high": "border-color: #FF6B00; color: #FF6B00;",
+            "medium": "border-color: #FFB800; color: #FFB800;",
+            "low": "border-color: #00FF88; color: #00FF88;",
         }
         st.markdown(
             f"""
-        <div style='{risk_colors.get(risk_class, "")} padding: 0.5rem; text-align: center; 
-                    font-weight: 700; margin-top: 0.5rem; font-size: 0.9rem; text-transform: uppercase;'>
-            {risk_label.split(" ")[0]} // {risk_pct:.1f}% CAPACITY
+        <div style='border: 1px solid; {risk_styles.get(risk_class, "")} padding: 0.5rem; text-align: center; 
+                    font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;'>
+            {risk_label.split(" ")[0]} // {risk_pct:.1f}%
         </div>
         </div>
         """,
@@ -1190,45 +955,31 @@ def present(
         )
 
     with col2:
-        st.markdown(
-            """
-        <div class="metric-card">
-        """,
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<h4 style='margin-top: 0; color: #888; font-size: 0.9rem;'>24H FORECAST</h4>",
-            unsafe_allow_html=True,
-        )
-        pred_time = now + timedelta(hours=24)
-        st.markdown(
-            f"<p style='color: #888; font-weight: 500; font-size: 0.8rem;'>// {pred_time.strftime('%Y-%m-%d %H:%M')} ICT // LSTM MODEL</p>",
-            unsafe_allow_html=True,
-        )
+        st.markdown("<div class='nothing-card'><div style='color:#666;font-size:0.7rem;letter-spacing:2px;margin-bottom:0.3rem;'>24H FORECAST</div>", unsafe_allow_html=True)
 
-        fig2 = create_gauge(prediction_24h, "Predicted Level")
+        fig2 = create_gauge(prediction_24h, "")
         st.plotly_chart(
             fig2, use_container_width=True, config={"displayModeBar": False}
         )
 
         change = prediction_24h - current_water_level
         if change > 0.1:
-            change_style = "border: 1px solid #D71921; color: #D71921;"
-            change_icon = "▲"
-            change_text = f"RISE: +{change:.2f} M"
+            change_style = "border-color: #D71921; color: #D71921;"
+            change_icon = "↑"
+            change_text = f"RISE +{change:.2f}M"
         elif change < -0.1:
-            change_style = "border: 1px solid #4285F4; color: #4285F4;"
-            change_icon = "▼"
-            change_text = f"DROP: {change:.2f} M"
+            change_style = "border-color: #00BFFF; color: #00BFFF;"
+            change_icon = "↓"
+            change_text = f"DROP {change:.2f}M"
         else:
-            change_style = "border: 1px solid #34A853; color: #34A853;"
-            change_icon = "—"
-            change_text = f"STABLE: {change:+.2f} M"
+            change_style = "border-color: #00FF88; color: #00FF88;"
+            change_icon = "→"
+            change_text = f"STABLE {change:+.2f}M"
 
         st.markdown(
             f"""
-        <div style='{change_style} padding: 0.5rem; text-align: center; 
-                    font-weight: 700; margin-top: 0.5rem; font-size: 0.9rem; text-transform: uppercase;'>
+        <div style='border: 1px solid; {change_style} padding: 0.5rem; text-align: center; 
+                    font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;'>
             {change_icon} {change_text}
         </div>
         </div>
@@ -1237,15 +988,9 @@ def present(
         )
 
     with col3:
-        st.markdown(
-            """
-        <div class="metric-card">
-            <h4 style="margin-top: 0; color: #888; font-size: 0.9rem;">ATMOSPHERE</h4>
-        """,
-            unsafe_allow_html=True,
-        )
+        st.markdown("<div class='nothing-card'><div style='color:#666;font-size:0.7rem;letter-spacing:2px;margin-bottom:0.5rem;'>WEATHER</div>", unsafe_allow_html=True)
 
-        # Weather metrics - Minimalist
+        # Weather metrics - Nothing.tech style
         metrics_data = [
             ("TEMP", f"{current_data['temperature_2m']:.1f}°C"),
             ("RAIN", f"{current_data['rain']:.1f}mm"),
@@ -1256,28 +1001,34 @@ def present(
         for label, value in metrics_data:
             st.markdown(
                 f"""
-            <div style='display: flex; justify-content: space-between; align-items: center; margin: 0.8rem 0; border-bottom: 1px dotted #333; padding-bottom: 0.2rem;'>
-                <span style='font-size: 0.9rem; color: #888;'>{label}</span>
-                <span style='font-size: 1rem; font-weight: 700; color: #FFF;'>{value}</span>
+            <div class="nothing-metric">
+                <span class="nothing-metric-label">{label}</span>
+                <span class="nothing-metric-value">{value}</span>
             </div>
             """,
                 unsafe_allow_html=True,
             )
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Time series chart with enhanced styling
-    st.markdown("---")
+    # Water Level Timeline Section
     st.markdown(
         """
-    <div style='background: #000; border: 1px solid #333; padding: 1rem 1.5rem; 
-                margin: 1.5rem 0 1rem 0; font-weight: 600; text-align: center;'>
-        <h2 style='color: #D71921; margin: 0; font-weight: 700;'>// WATER LEVEL FORECAST //</h2>
+    <div class="nothing-section" style="justify-content: center;">
+        <span style="color: #FFF; font-weight: 700; font-size: 1.1rem; letter-spacing: 2px;">WATER LEVEL TIMELINE</span>
     </div>
     """,
         unsafe_allow_html=True,
     )
 
-    # Past 24h and future 24h
+    # Get all water level inputs for display
+    wl_now = st.session_state.get("water_level_now", current_water_level)
+    wl_1h = st.session_state.get("water_level_1h", current_water_level)
+    wl_6h = st.session_state.get("water_level_6h", current_water_level)
+    wl_12h = st.session_state.get("water_level_12h", current_water_level)
+    wl_24h = st.session_state.get("water_level_24h", current_water_level)
+
+    # Create comprehensive water level chart
+    # Past 24h from interpolation
     past_start = max(0, current_idx - 24)
     df_past = df_with_real.iloc[past_start : current_idx + 1]
 
@@ -1285,20 +1036,49 @@ def present(
     future_times = pd.date_range(now, periods=25, freq="h")
     future_levels = np.linspace(current_water_level, prediction_24h, 25)
     # Add slight variation to make it more realistic
-    future_levels += np.sin(np.linspace(0, 4 * np.pi, 25)) * 0.04
+    future_levels += np.sin(np.linspace(0, 4 * np.pi, 25)) * 0.03
 
     fig = go.Figure()
 
-    # Past data (real or historical) - Gemini theme
+    # Past data (interpolated from manual inputs)
     fig.add_trace(
         go.Scatter(
             x=df_past.index,
             y=df_past["water_level"],
             mode="lines",
-            name="PAST 24H (REAL)",
+            name="PAST 24H",
             line=dict(color="#FFFFFF", width=2),
             fill="tozeroy",
-            fillcolor="rgba(255, 255, 255, 0.1)",
+            fillcolor="rgba(255, 255, 255, 0.05)",
+        )
+    )
+
+    # Manual input points (key data points)
+    input_times = [
+        now,
+        now - timedelta(hours=1),
+        now - timedelta(hours=6),
+        now - timedelta(hours=12),
+        now - timedelta(hours=24),
+    ]
+    input_levels = [wl_now, wl_1h, wl_6h, wl_12h, wl_24h]
+    input_labels = ["NOW", "-1H", "-6H", "-12H", "-24H"]
+
+    fig.add_trace(
+        go.Scatter(
+            x=input_times,
+            y=input_levels,
+            mode="markers+text",
+            name="INPUT DATA",
+            marker=dict(
+                color="#FFFFFF",
+                size=12,
+                symbol="diamond",
+                line=dict(color="#D71921", width=2),
+            ),
+            text=input_labels,
+            textposition="top center",
+            textfont=dict(color="#888", size=10, family="Space Mono"),
         )
     )
 
@@ -1308,14 +1088,14 @@ def present(
             x=future_times,
             y=future_levels,
             mode="lines",
-            name="FORECAST 24H (AI)",
-            line=dict(color="#D71921", width=2, dash="dash"),
+            name="FORECAST +24H",
+            line=dict(color="#D71921", width=2, dash="dot"),
             fill="tozeroy",
-            fillcolor="rgba(215, 25, 33, 0.1)",
+            fillcolor="rgba(215, 25, 33, 0.08)",
         )
     )
 
-    # Current point
+    # Current point (highlighted)
     fig.add_trace(
         go.Scatter(
             x=[now],
@@ -1347,67 +1127,69 @@ def present(
         line_dash="dash",
         line_color="#D71921",
         line_width=2,
-        annotation_text=f"// BANK LEVEL ({BANK_LEVEL} M) //",
+        annotation_text=f"BANK LEVEL {BANK_LEVEL}M",
         annotation_position="right",
         annotation_font_color="#D71921",
-        annotation_font_family="Roboto Mono",
+        annotation_font_family="Space Mono",
         annotation_font_size=10,
     )
     fig.add_hline(
         y=0,
         line_dash="dot",
-        line_color="#888888",
+        line_color="#444",
         line_width=1,
-        annotation_text="// MEAN SEA LEVEL //",
+        annotation_text="SEA LEVEL",
         annotation_position="right",
-        annotation_font_color="#888888",
-        annotation_font_family="Roboto Mono",
+        annotation_font_color="#666",
+        annotation_font_family="Space Mono",
         annotation_font_size=10,
     )
 
     fig.update_layout(
-        xaxis_title="TIME",
+        xaxis_title="",
         yaxis_title="LEVEL (m)",
-        height=420,
+        height=400,
         hovermode="x unified",
         legend=dict(
             orientation="h",
             yanchor="bottom",
             y=1.02,
-            xanchor="right",
-            x=1,
-            font=dict(color="#888"),
+            xanchor="center",
+            x=0.5,
+            font=dict(color="#888", size=10, family="Space Mono"),
+            bgcolor="rgba(0,0,0,0)",
         ),
-        margin=dict(l=60, r=50, t=40, b=60),
+        margin=dict(l=50, r=30, t=50, b=40),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Roboto Mono", size=12, color="#E6E6E6"),
+        font=dict(family="Space Mono", size=11, color="#FFF"),
         xaxis=dict(
             showgrid=True,
-            gridcolor="#222",
-            linecolor="#444",
-            title=dict(font=dict(color="#888")),
+            gridcolor="rgba(255,255,255,0.05)",
+            linecolor="#333",
+            tickfont=dict(color="#666"),
+            zeroline=False,
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor="#222",
-            linecolor="#444",
-            title=dict(font=dict(color="#888")),
+            gridcolor="rgba(255,255,255,0.05)",
+            linecolor="#333",
+            tickfont=dict(color="#666"),
+            zeroline=False,
         ),
     )
 
     st.plotly_chart(
         fig,
         use_container_width=True,
-        config={"displayModeBar": True, "displaylogo": False},
+        config={"displayModeBar": False},
     )
 
-    # Weather charts with enhanced styling
+    # Weather Section
     st.markdown(
         """
-    <div style='background: #000; border: 1px solid #333; padding: 1rem 1.5rem; 
-                margin: 1.5rem 0 1rem 0; font-weight: 600; text-align: center;'>
-        <h2 style='color: #D71921; margin: 0; font-weight: 700;'>// WEATHER FORECAST //</h2>
+    <div class="nothing-section" style="margin-top: 2rem; justify-content: center;">
+        <span style="color: #FFF; font-weight: 700; font-size: 1.1rem; letter-spacing: 2px;">WEATHER DATA</span>
     </div>
     """,
         unsafe_allow_html=True,
@@ -1426,33 +1208,39 @@ def present(
                 marker=dict(
                     color=df_weather_display["rain"],
                     colorscale=[
-                        [0, "#111"],
-                        [0.5, "#888"],
+                        [0, "#1A1A1A"],
+                        [0.3, "#444"],
+                        [0.6, "#888"],
                         [1, "#D71921"],
-                    ],  # Monochrome with red accent
-                    showscale=True,
-                    colorbar=dict(
-                        title=dict(
-                            text="MM/HR", font=dict(color="#888", family="Roboto Mono")
-                        ),
-                        tickfont=dict(color="#888", family="Roboto Mono"),
-                    ),
+                    ],
+                    showscale=False,
                 ),
                 name="RAINFALL",
             )
         )
         fig_rain.update_layout(
             title=dict(
-                text="RAINFALL (MM/HR)",
-                font=dict(size=16, color="#E6E6E6", family="Roboto Mono"),
+                text="RAINFALL",
+                font=dict(size=12, color="#888", family="Space Mono"),
+                x=0.5,
             ),
-            height=280,
-            margin=dict(l=50, r=20, t=50, b=50),
+            height=220,
+            margin=dict(l=40, r=20, t=40, b=30),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(family="Roboto Mono", color="#E6E6E6"),
-            xaxis=dict(showgrid=True, gridcolor="#222", linecolor="#444"),
-            yaxis=dict(showgrid=True, gridcolor="#222", linecolor="#444"),
+            font=dict(family="Space Mono", color="#666", size=10),
+            xaxis=dict(
+                showgrid=False, 
+                linecolor="#333", 
+                tickfont=dict(color="#444")
+            ),
+            yaxis=dict(
+                showgrid=True, 
+                gridcolor="rgba(255,255,255,0.03)", 
+                linecolor="#333",
+                tickfont=dict(color="#444"),
+                title=dict(text="mm/h", font=dict(color="#555", size=10)),
+            ),
         )
         st.plotly_chart(
             fig_rain, use_container_width=True, config={"displayModeBar": False}
@@ -1464,146 +1252,166 @@ def present(
             go.Scatter(
                 x=df_weather_display.index,
                 y=df_weather_display["temperature_2m"],
-                mode="lines+markers",
+                mode="lines",
                 name="TEMPERATURE",
-                line=dict(color="#D71921", width=2),
-                marker=dict(size=6, color="#D71921"),
+                line=dict(color="#D71921", width=1.5),
                 fill="tozeroy",
-                fillcolor="rgba(215, 25, 33, 0.1)",
+                fillcolor="rgba(215, 25, 33, 0.08)",
             )
         )
         fig_temp.update_layout(
             title=dict(
-                text="TEMPERATURE (°C)",
-                font=dict(size=16, color="#E6E6E6", family="Roboto Mono"),
+                text="TEMPERATURE",
+                font=dict(size=12, color="#888", family="Space Mono"),
+                x=0.5,
             ),
-            height=280,
-            margin=dict(l=50, r=20, t=50, b=50),
+            height=220,
+            margin=dict(l=40, r=20, t=40, b=30),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(family="Roboto Mono", color="#E6E6E6"),
-            xaxis=dict(showgrid=True, gridcolor="#222", linecolor="#444"),
-            yaxis=dict(showgrid=True, gridcolor="#222", linecolor="#444"),
+            font=dict(family="Space Mono", color="#666", size=10),
+            xaxis=dict(
+                showgrid=False, 
+                linecolor="#333", 
+                tickfont=dict(color="#444")
+            ),
+            yaxis=dict(
+                showgrid=True, 
+                gridcolor="rgba(255,255,255,0.03)", 
+                linecolor="#333",
+                tickfont=dict(color="#444"),
+                title=dict(text="°C", font=dict(color="#555", size=10)),
+            ),
         )
         st.plotly_chart(
             fig_temp, use_container_width=True, config={"displayModeBar": False}
         )
 
-    # Enhanced Footer
-    st.markdown("---")
+    # Footer - simplified
     st.markdown(
-        f"""
-    <div style='background: #000; border: 1px solid #333; padding: 2rem; margin-top: 2rem; 
-                text-align: center;'>
-        <div style='margin-bottom: 1rem;'>
-            <h3 style='color: #E6E6E6; margin: 0.5rem 0; font-weight: 700;'>WATER LEVEL MONITORING SYSTEM</h3>
-            <p style='color: #888; margin: 0.25rem 0; font-size: 0.9rem; font-weight: 500;'>STATION CPY015 // KRUNGTHEP BRIDGE</p>
-        </div>
-        <div style='display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin: 1rem 0;'>
-            <span class="status-badge">
-                <a href="https://www.thaiwater.net/water/wl" target="_blank" style='color: #E6E6E6; text-decoration: none; font-weight: 600;'>THAI WATER NETWORK</a>
-            </span>
-            <span class="status-badge">
-                MODEL: {selected_model_name.upper()}
-            </span>
-            <span class="status-badge">
-                MAE ~0.12M // R² ~0.94
-            </span>
-        </div>
-        <p style='color: #555; margin-top: 1.5rem; font-style: italic; font-size: 0.8rem; font-weight: 500;'>
-            CPDSAI PROJECT // ASIAN INSTITUTE OF TECHNOLOGY
-        </p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-
-def setup_sidebar(models):
-    """
-    Setup sidebar with information (No model selection)
-    """
-    st.sidebar.markdown(
         """
-    <div style='background: #000; border: 1px solid #333; padding: 1.5rem; text-align: center;'>
-        <h2 style='color: #FFF; margin: 0; font-size: 1.2rem; letter-spacing: 2px;'>CONTROLS</h2>
+    <div style="text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px dashed #222;">
+        <span style="color: #444; font-size: 0.7rem; letter-spacing: 2px;">
+            LSTM · R²=0.94 · MAE=0.12m · 
+            <a href="https://www.thaiwater.net/water/wl" target="_blank" style="color: #666;">THAIWATER.NET ↗</a> · 
+            CPDSAI @ AIT
+        </span>
     </div>
     """,
         unsafe_allow_html=True,
     )
 
+
+def setup_controls(models):
+    """
+    Setup controls on main page (simplified layout)
+    """
     # Default to LSTM
     selected_model_name = "LSTM"
     selected_model = models.get("LSTM")
 
     if not selected_model:
-        st.sidebar.error("LSTM model not found!")
+        st.error("LSTM model not found!")
         return None, None, datetime.now()
 
-    # Current time (real-time mode)
+    # Current time
     now = datetime.now().replace(minute=0, second=0, microsecond=0)
-    st.sidebar.markdown("#### SYSTEM TIME")
-    st.sidebar.markdown(
+    
+    # Initialize session state for water levels if not exists
+    default_level = 0.5
+    if "water_level_now" not in st.session_state:
+        st.session_state.water_level_now = default_level
+        st.session_state.water_level_1h = default_level
+        st.session_state.water_level_6h = default_level
+        st.session_state.water_level_12h = default_level
+        st.session_state.water_level_24h = default_level
+
+    # Header
+    st.markdown(
         f"""
-    <div style='border: 1px dotted #444; padding: 1rem; text-align: center; margin: 0.5rem 0;'>
-        <p style='font-size: 1rem; color: #888; margin: 0;'>{now.strftime("%Y-%m-%d")}</p>
-        <p style='font-size: 1.5rem; font-weight: 700; color: #D71921; margin: 0;'>{now.strftime("%H:%M")}</p>
-        <p style='font-size: 0.7rem; color: #555; margin: 0; letter-spacing: 1px;'>ICT ZONE</p>
+    <div class="nothing-header">
+        <div style="font-size: 2.2rem; font-weight: 700; letter-spacing: -1px; line-height: 1;">
+            WATER<span style="color: #D71921;">.</span>LEVEL
+        </div>
+        <div style="color: #666; font-size: 0.8rem; letter-spacing: 2px; margin-top: 0.3rem;">
+            CPY015 · KRUNGTHEP BRIDGE · {now.strftime("%Y.%m.%d %H:%M")}
+        </div>
     </div>
     """,
         unsafe_allow_html=True,
     )
 
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("#### 📊 Station Info")
-    st.sidebar.markdown(
-        f"""
-    <div style='background: var(--surface); padding: 1rem; border-radius: 8px; 
-                box-shadow: var(--shadow-sm); margin: 0.5rem 0; border: 1px solid var(--border);'>
-        <p style='margin: 0.5rem 0; color: var(--text-main);'><strong style='color: var(--text-main);'>Bank Level:</strong><br>
-        <span style='color: var(--danger); font-weight: 700; font-size: 1.1rem;'>{BANK_LEVEL} m.MSL</span></p>
-        <p style='margin: 0.5rem 0; color: var(--text-main);'><strong style='color: var(--text-main);'>Bed Level:</strong><br>
-        <span style='color: var(--primary); font-weight: 700; font-size: 1.1rem;'>{BED_LEVEL} m.MSL</span></p>
-        <p style='margin: 0.5rem 0; color: var(--text-main);'><strong style='color: var(--text-main);'>Location:</strong><br>
-        <span style='color: var(--text-muted); font-size: 0.9rem; font-weight: 500;'>13.7003°N, 100.4928°E</span></p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("#### 🤖 Model Status")
-    st.sidebar.markdown(
+    # Control bar - all inputs in one row
+    st.markdown(
         """
-    <div style='background: var(--success); color: #ffffff; padding: 0.75rem; border-radius: 8px; 
-                margin: 0.5rem 0; box-shadow: var(--shadow-sm);'>
-        <strong style='color: #ffffff; font-size: 1rem;'>✅ LSTM Model</strong><br>
-        <small style='color: #ffffff; font-weight: 500;'>Deep Learning - Active</small>
+    <div class="nothing-section" style="justify-content: center; margin-bottom: 0.5rem;">
+        <span style="color: #888; font-size: 0.8rem; letter-spacing: 2px;">WATER LEVEL INPUT (m.MSL)</span>
+        <span style="color: #666; font-size: 0.7rem; margin-left: 1rem;">
+            from <a href="https://www.thaiwater.net/water/wl" target="_blank" style="color: #D71921;">thaiwater.net ↗</a>
+        </span>
     </div>
     """,
         unsafe_allow_html=True,
     )
-
-    # Refresh button
-    st.sidebar.markdown("---")
-    if st.sidebar.button("🔄 Refresh Data", use_container_width=True, type="primary"):
-        st.cache_data.clear()
-        st.rerun()
-
-    # Data source info in sidebar
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("#### 📡 Data Source")
-    st.sidebar.markdown(
-        """
-    <div style='background: var(--background); padding: 1rem; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--border);'>
-        <p style='margin: 0.5rem 0; color: var(--text-main);'><strong style='color: var(--text-main);'>Real-time:</strong><br>
-        <span style='color: var(--primary); font-weight: 600;'>Thai Water Network</span></p>
-        <p style='margin: 0.5rem 0; color: var(--text-main);'><strong style='color: var(--text-main);'>Forecast:</strong><br>
-        <span style='color: var(--primary); font-weight: 600;'>LSTM Deep Learning</span></p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    
+    # All inputs in one row
+    c1, c2, c3, c4, c5, c6 = st.columns([1, 1, 1, 1, 1, 0.8])
+    
+    with c1:
+        st.session_state.water_level_now = st.number_input(
+            "NOW",
+            min_value=-15.0,
+            max_value=3.0,
+            value=st.session_state.water_level_now,
+            step=0.01,
+            format="%.2f",
+            key="input_now",
+        )
+    with c2:
+        st.session_state.water_level_1h = st.number_input(
+            "-1H",
+            min_value=-15.0,
+            max_value=3.0,
+            value=st.session_state.water_level_1h,
+            step=0.01,
+            format="%.2f",
+            key="input_1h",
+        )
+    with c3:
+        st.session_state.water_level_6h = st.number_input(
+            "-6H",
+            min_value=-15.0,
+            max_value=3.0,
+            value=st.session_state.water_level_6h,
+            step=0.01,
+            format="%.2f",
+            key="input_6h",
+        )
+    with c4:
+        st.session_state.water_level_12h = st.number_input(
+            "-12H",
+            min_value=-15.0,
+            max_value=3.0,
+            value=st.session_state.water_level_12h,
+            step=0.01,
+            format="%.2f",
+            key="input_12h",
+        )
+    with c5:
+        st.session_state.water_level_24h = st.number_input(
+            "-24H",
+            min_value=-15.0,
+            max_value=3.0,
+            value=st.session_state.water_level_24h,
+            step=0.01,
+            format="%.2f",
+            key="input_24h",
+        )
+    with c6:
+        st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
+        if st.button("⟳", use_container_width=True, help="Refresh Data"):
+            st.cache_data.clear()
+            st.rerun()
 
     return selected_model_name, selected_model, now
 
@@ -1612,8 +1420,8 @@ def fetch_and_process_data(selected_model_name, selected_model, now):
     """
     Fetch and process all data needed for predictions
     """
-    # Fetch real-time water level from Thai Water website
-    thaiwater_data = fetch_water_level_thaiwater()
+    # Get water level from manual input (session state)
+    manual_water_data = get_manual_water_level_input()
 
     # Fetch weather data
     weather_df = fetch_current_weather()
@@ -1636,59 +1444,55 @@ def fetch_and_process_data(selected_model_name, selected_model, now):
     if "river_discharge" not in weather_df.columns:
         weather_df["river_discharge"] = 1200 + np.random.normal(0, 100, len(weather_df))
 
-    # Get current water level from Thai Water (real-time) or fallback
+    # Get current water level from manual input
     if (
-        thaiwater_data
-        and thaiwater_data["status"] == "success"
-        and thaiwater_data["water_level"] is not None
+        manual_water_data
+        and manual_water_data["status"] == "success"
     ):
-        current_water_level = thaiwater_data["water_level"]
-        measure_time = thaiwater_data["measure_datetime"]
-        data_source = "🌐 Thai Water (Real-time)"
-        st.success(
-            f"✅ Successfully fetched real-time data from Thai Water: {current_water_level:.3f} m.MSL"
-        )
+        current_water_level = manual_water_data["water_level_now"]
+        measure_time = manual_water_data["measure_datetime"]
+        data_source = "✏️ Manual Input"
+        
+        # Get all water level inputs
+        wl_now = manual_water_data["water_level_now"]
+        wl_1h = manual_water_data["water_level_1h"]
+        wl_6h = manual_water_data["water_level_6h"]
+        wl_12h = manual_water_data["water_level_12h"]
+        wl_24h = manual_water_data["water_level_24h"]
     else:
-        # Fallback to historical data
-        historical_df = load_historical_data()
-        if historical_df is not None and len(historical_df) > 0:
-            current_water_level = historical_df["water_level"].iloc[-1]
-            measure_time = historical_df.index[-1]
-            data_source = "📊 Historical Data (Fallback)"
-            if thaiwater_data and thaiwater_data["status"] != "success":
-                st.warning(
-                    f"⚠️ Could not fetch from Thai Water: {thaiwater_data.get('error', 'Unknown error')}. Using historical data."
-                )
-        else:
-            # Last resort: default value
-            current_water_level = 0.4
-            measure_time = now
-            data_source = "⚙️ Default Value"
-            st.error("❌ Could not fetch water level data. Using default value.")
+        # Use default values from session state
+        current_water_level = st.session_state.get("water_level_now", 0.5)
+        wl_now = current_water_level
+        wl_1h = st.session_state.get("water_level_1h", 0.5)
+        wl_6h = st.session_state.get("water_level_6h", 0.5)
+        wl_12h = st.session_state.get("water_level_12h", 0.5)
+        wl_24h = st.session_state.get("water_level_24h", 0.5)
+        measure_time = now
+        data_source = "✏️ Manual Input"
 
     # Add current water level to weather dataframe for predictions
     weather_df["water_level"] = current_water_level
 
-    # Create time series with real current level
-    # Use real data for current time, then use model for future predictions
+    # Create time series with current level
     df_with_real = weather_df.copy()
 
-    # For past 24 hours, use historical data if available, otherwise use current level
-    historical_df = load_historical_data()
-    if historical_df is not None and len(historical_df) > 0:
-        # Get last 24 hours of historical data
-        past_24h = historical_df.tail(24).copy()
-        past_24h.index = pd.date_range(end=now, periods=len(past_24h), freq="h")
-
-        # Merge with weather data
-        for col in past_24h.columns:
-            if col not in df_with_real.columns:
-                df_with_real[col] = np.nan
-
-        # Fill past 24h with historical water levels
-        for idx in past_24h.index:
-            if idx in df_with_real.index:
-                df_with_real.loc[idx, "water_level"] = past_24h.loc[idx, "water_level"]
+    # Create past 24 hours water levels using interpolation from manual inputs
+    # Key points: now (0h), 1h ago, 6h ago, 12h ago, 24h ago
+    key_hours = [0, 1, 6, 12, 24]
+    key_levels = [wl_now, wl_1h, wl_6h, wl_12h, wl_24h]
+    
+    # Interpolate for all 24 hours
+    all_hours = np.arange(0, 25)  # 0 to 24 hours ago
+    interpolated_levels = np.interp(all_hours, key_hours, key_levels)
+    
+    # Create past 24h time index
+    past_24h_idx = pd.date_range(end=now, periods=25, freq="h")
+    
+    # Assign interpolated water levels (reverse order: oldest first)
+    for i, idx in enumerate(past_24h_idx):
+        hours_ago = 24 - i  # 24h ago to now
+        if idx in df_with_real.index:
+            df_with_real.loc[idx, "water_level"] = interpolated_levels[hours_ago]
 
     # Set current water level at current time
     if now in df_with_real.index:
@@ -1736,13 +1540,11 @@ def main():
         )
         return
 
-    # Setup sidebar
-    selected_model_name, selected_model, now = setup_sidebar(models)
+    # Setup controls on main page
+    selected_model_name, selected_model, now = setup_controls(models)
 
     # Fetch and process data
-    with st.spinner(
-        f"📡 Fetching real-time data from Thai Water... Using {selected_model_name} for predictions"
-    ):
+    with st.spinner("Loading data..."):
         (
             current_water_level,
             prediction_24h,
