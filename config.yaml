@@ -1,0 +1,121 @@
+# Configuration file for Water Level Prediction Project
+# Station CPY015 - Krungthep Bridge
+
+# Station parameters
+station:
+  code: "CPY015"
+  name: "Krungthep Bridge"
+  latitude: 13.700287
+  longitude: 100.492805
+  bank_level: 2.161  # meters MSL
+  bed_level: -15.70  # meters MSL
+  timezone: "Asia/Bangkok"
+
+# Data paths
+data:
+  raw_data_path: "full_merged.csv"
+  featured_data_path: "full_merged_featured.csv"
+  models_dir: "models"
+  artifacts_dir: "artifacts"
+
+# Forecast parameters
+forecast:
+  horizon: 24  # hours ahead
+  sequence_length: 48  # for LSTM
+
+# Train/Test split
+split:
+  test_size: 0.2  # 20% for test
+  train_val_size: 0.8  # 80% for train+val
+
+# Cross-validation
+cv:
+  n_splits: 5
+  method: "TimeSeriesSplit"
+
+# Feature engineering
+features:
+  lag_hours: [1, 2, 3, 6, 12, 24]
+  rolling_windows: [6, 12, 24]
+  rolling_stats: ["mean", "std", "min", "max"]
+  rolling_features: ["rain", "precipitation", "river_discharge", "temperature_2m"]
+  time_features: true  # hour, day_of_week, month, etc.
+  holidays: false  # Set to true if holiday data available
+
+# Models
+models:
+  linear:
+    use_scaler: true
+  ridge:
+    use_scaler: true
+    alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+  xgboost:
+    use_scaler: false  # Tree models don't need scaling
+    n_estimators: 150
+    max_depth: 5
+    learning_rate: 0.05
+    reg_alpha: 0.1
+    reg_lambda: 1.0
+    subsample: 0.8
+    colsample_bytree: 0.8
+    min_child_weight: 3
+  lightgbm:
+    use_scaler: false
+    n_estimators: 150
+    max_depth: 5
+    learning_rate: 0.05
+    reg_alpha: 0.1
+    reg_lambda: 1.0
+    subsample: 0.8
+    colsample_bytree: 0.8
+    min_child_samples: 20
+  lstm:
+    use_scaler: true
+    hidden_size: 128
+    num_layers: 1
+    dropout: 0.3
+    batch_size: 64
+    epochs: 50
+    learning_rate: 0.001
+    weight_decay: 0.001
+    patience: 10
+    gradient_clip: 1.0
+
+# Evaluation metrics
+metrics:
+  - "MAE"
+  - "RMSE"
+  - "MSE"
+  - "MAPE"
+  - "sMAPE"
+  - "R2"
+
+# Baselines
+baselines:
+  persistence: true
+  seasonal_naive: true
+  rolling_mean: true
+  rolling_mean_windows: [6, 12, 24]
+
+# Reproducibility
+random_seed: 42
+
+# Data quality
+data_quality:
+  check_missingness: true
+  check_outliers: true
+  check_timezone: true
+  check_gaps: true
+  outlier_method: "iqr"  # or "zscore"
+  outlier_threshold: 3.0
+
+# Production
+production:
+  save_artifacts: true
+  artifacts:
+    - "model"
+    - "scaler"
+    - "feature_names"
+    - "feature_schema"
+    - "training_range"
+    - "config"
