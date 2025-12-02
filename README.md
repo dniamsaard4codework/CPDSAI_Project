@@ -757,8 +757,12 @@ This project is developed for academic purposes as part of the Computer Programm
 ## Author
 
 - **Dechathon Niamsaard**
+- **Zwe Yu Ya Kyaw zin Oo**
 - **Repository**: [CPDSAI_Project](https://github.com/dniamsaard4codework/CPDSAI_Project)
 
 ---
+
+## Instructure
+- **Asst. Prof. Chantri Polprasert**
 
 *Last Updated: December 2025*
