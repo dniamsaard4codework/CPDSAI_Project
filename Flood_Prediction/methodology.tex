@@ -8,12 +8,12 @@
 \subsection{Description}
 The primary dataset used in this project is a merged hydro-meteorological time series created by integrating three distinct sources:
 
-\begin{itemize}
-    \item \textbf{1. Water Level Data (Station CPY015)}
+\begin{enumerate}
+    \item \textbf{Water Level Data (Station CPY015)}
 
     This dataset\cite{hiiwaterlevel} originates from the \textbf{Thai Water Reporting System (Hydro-Informatics Institute)} and contains hourly water level measurements in meters above Mean Sea Level (m.MSL). Station CPY015 is located at latitude 13.7361 and longitude 100.5464, with reference values including Ground Level (1.951 m.MSL), Bank Level (2.161 m.MSL), and Bed Level (-15.70 m.MSL).
 
-    \item \textbf{2. Meteorological Data (Open-Meteo)}
+    \item \textbf{Meteorological Data (Open-Meteo)}
 
     To enrich the hydrological records, historical weather data were retrieved through the Open-Meteo archive API\cite{openmeteo} and provides hourly observations for the following meteorological variables:
     \begin{itemize}
@@ -26,10 +26,10 @@ The primary dataset used in this project is a merged hydro-meteorological time s
         \item \texttt{et0\_fao\_evapotranspiration}
     \end{itemize}
 
-    \item \textbf{3. River Discharge Data (Open-Meteo Flood API)}
+    \item \textbf{River Discharge Data (Open-Meteo Flood API)}
 
     Upstream flow conditions were captured using the Open-Meteo Flood API, which provides modeled river discharge estimates in $m^3/s$. Discharge values were sampled near the station location and merged with water level and weather data through time-based interpolation to align with the prediction timeline.
-\end{itemize}
+\end{enumerate}
 
 \subsection{Key Feature Groups}
 \begin{itemize}
