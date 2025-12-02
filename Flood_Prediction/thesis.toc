@@ -59,3 +59,7 @@
 \setcounter {tocdepth}{-5}
 \contentsline {chapter}{\numberline {B}FEATURE ENGINEERING}{28}{appendix.B}%
 \setcounter {tocdepth}{2}
+\contentsline {section}{\bf {APPENDIX C: AUTHOR CONTACT INFORMATION}}{30}{section*.30}%
+\setcounter {tocdepth}{-5}
+\contentsline {chapter}{\numberline {C}AUTHOR CONTACT INFORMATION}{30}{appendix.C}%
+\setcounter {tocdepth}{2}
