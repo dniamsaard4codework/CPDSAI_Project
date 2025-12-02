@@ -605,20 +605,7 @@ Incorporating 16 meteorological variables significantly improved prediction accu
 
 **Conclusion**: Weather data provides crucial **leading indicators** that allow the model to anticipate water level changes before they occur, rather than simply extrapolating past water level trends. This is especially valuable during transitional periods (monsoon onset) and extreme weather events.
 
-### 7.5 Model Complexity Analysis
 
-| Model | Parameters | Training Time | Inference Time |
-|-------|------------|---------------|----------------|
-| Linear Regression | ~50 | < 1 sec | < 1 ms |
-| Ridge Regression | ~50 | < 1 sec | < 1 ms |
-| XGBoost | ~2,000 trees | ~30 sec | ~5 ms |
-| LightGBM | ~2,000 trees | ~20 sec | ~3 ms |
-| **LSTM** | ~50,000 | ~10 min | ~10 ms |
-
-**Trade-off Analysis:**
-- LSTM requires more resources but achieves best accuracy
-- LightGBM offers excellent balance of speed and accuracy
-- Linear models suitable for interpretable baselines
 
 ### 7.6 Limitations
 
