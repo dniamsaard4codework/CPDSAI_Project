@@ -1,0 +1,110 @@
+\appendix
+\renewcommand{\appendixname}{APPENDIX}
+\captionsetup[table]{labelfont=bf,name=Table\space,labelsep=colon,justification=centering}
+\captionsetup[figure]{labelfont=bf,name=Figure\space,labelsep=colon,justification=centering}
+\renewcommand\thefigure{\thechapter\arabic{figure}} 
+\newcommand{\stoptocwriting}{%
+  \addtocontents{toc}{\protect\setcounter{tocdepth}{-5}}}
+\newcommand{\resumetocwriting}{%
+  \addtocontents{toc}{\protect\setcounter{tocdepth}{\arabic{tocdepth}}}}
+
+\captionsetup{
+  textfont=bf,
+  justification=centering
+}
+
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\bf APPENDICES}
+\begin{center}
+    \vspace*{\fill}
+    \large{\bf APPENDICES}
+    \vspace*{\fill}
+\end{center}
+\newpage
+
+\phantomsection
+\addcontentsline{toc}{section}{\bf {APPENDIX A: LSTM MODEL IMPLEMENTATION}}
+\stoptocwriting
+\chapter{LSTM MODEL IMPLEMENTATION}
+\resumetocwriting
+
+The following PyTorch code demonstrates the implementation of the LSTM model used in this study.
+
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+
+class LSTMModel(nn.Module):
+    def __init__(self, input_size, hidden_size=128, num_layers=1, dropout=0.3):
+        super(LSTMModel, self).__init__()
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, 
+                           batch_first=True, dropout=dropout if num_layers > 1 else 0)
+        self.dropout = nn.Dropout(dropout)
+        self.fc = nn.Linear(hidden_size, 1)
+        
+    def forward(self, x):
+        # x shape: (batch_size, sequence_length, input_size)
+        lstm_out, _ = self.lstm(x)
+        
+        # Take output from the last time step
+        last_output = lstm_out[:, -1, :]
+        
+        # Apply dropout and fully connected layer
+        last_output = self.dropout(last_output)
+        output = self.fc(last_output)
+        return output
+\end{lstlisting}
+
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{\bf {APPENDIX B: FEATURE ENGINEERING}}
+\stoptocwriting
+\chapter{FEATURE ENGINEERING}
+\resumetocwriting
+
+The following features were engineered from the raw data to capture temporal patterns and hydrological dynamics.
+
+\section*{1. Time Features}
+\begin{itemize}
+    \item \texttt{hour}: Hour of the day (0-23)
+    \item \texttt{day\_of\_week}: Day of the week (0-6)
+    \item \texttt{month}: Month of the year (1-12)
+    \item \texttt{cyclical\_encoding}: Sine and cosine transformations of hour, day, and month to preserve cyclical nature.
+\end{itemize}
+
+\section*{2. Lag Features}
+Past values of water level were used as predictors:
+\begin{itemize}
+    \item \texttt{water\_level\_lag\_1}: Value 1 hour ago
+    \item \texttt{water\_level\_lag\_6}: Value 6 hours ago
+    \item \texttt{water\_level\_lag\_12}: Value 12 hours ago
+    \item \texttt{water\_level\_lag\_24}: Value 24 hours ago
+\end{itemize}
+
+\section*{3. Rolling Statistics}
+Rolling window statistics were calculated to capture trends:
+\begin{itemize}
+    \item \texttt{rolling\_mean\_[6,12,24]}: Moving average
+    \item \texttt{rolling\_std\_[6,12,24]}: Moving standard deviation (volatility)
+    \item \texttt{rolling\_min/max\_[6,12,24]}: Range of values
+\end{itemize}
+
+\newpage
+\section*{4. Risk Classification Logic}
+The function below defines the risk levels based on water level percentages:
+\begin{lstlisting}[language=Python, caption=Risk Classification Logic]
+# Adapted from ThaiWater (HII) standards
+def determine_risk_level(water_level_pct):
+    if water_level_pct >= 90:
+        return 'Critical'
+    elif water_level_pct >= 70:
+        return 'High Risk'
+    elif water_level_pct >= 30:
+        return 'Medium Risk'
+    else:
+        return 'Low Risk'
+\end{lstlisting}

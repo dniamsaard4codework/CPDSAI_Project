@@ -1,0 +1,61 @@
+~\hfill \textbf {Page}\par 
+\contentsline {chapter}{\bf ACKNOWLEDGEMENTS}{iii}{section*.1}%
+\contentsline {chapter}{\bf ABSTRACT}{iv}{section*.2}%
+\contentsline {chapter}{\bf LIST OF TABLES}{vii}{section*.4}%
+\contentsline {chapter}{\bf LIST OF FIGURES}{viii}{section*.6}%
+\contentsline {chapter}{\numberline {1}INTRODUCTION}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduction to Flood Prediction and Early Warning System}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Global perspective of Flood}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Local Perspective of Flood (Thailand)}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Why Do We Do This Project?}{3}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Problem Statement}{3}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Possible Users}{3}{subsection.1.5.1}%
+\contentsline {chapter}{\numberline {2}Literature Review}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Flood Prediction and Warning Systems}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}AI-Based Flood Monitoring}{5}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Global Early Warning Systems}{5}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Machine Learning for Water Level Forecasting}{5}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Synthesis and Gaps}{6}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Methodology}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Data Set}{7}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Description}{7}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Key Feature Groups}{8}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Risk Classification Standards}{8}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Data Acquisition}{9}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Exploratory Data Analysis (EDA)}{9}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Temporal Patterns and Seasonality}{9}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Feature Relationships}{9}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Distribution and Risk Profile}{10}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Rationale for Meteorological Integration}{12}{subsection.3.3.4}%
+\contentsline {section}{\numberline {3.4}Model Implementation and Training}{12}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Model Selection}{12}{subsection.3.4.1}%
+\contentsline {subsubsection}{Baseline Models}{12}{subsubsection*.15}%
+\contentsline {subsubsection}{Machine Learning Models}{13}{subsubsection*.16}%
+\contentsline {subsection}{\numberline {3.4.2}LSTM Architecture}{13}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Evaluation Metrics}{13}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Hyperparameters}{14}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}Training Strategy}{14}{subsection.3.4.5}%
+\contentsline {chapter}{\numberline {4}Experimental Results and Discussion}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Model Evaluation Results}{16}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Model Comparison}{16}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Feature Ablation Study}{16}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Why Weather Data Improves Model Accuracy}{16}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Feature Importance Analysis}{18}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Advanced Error Analysis}{19}{subsection.4.1.5}%
+\contentsline {section}{\numberline {4.2}Application Implementation and Deployment}{19}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Discussion}{21}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Comparison with the existing projects in terms of the model's performance, interpretability, and complexity}{21}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Limitations}{21}{subsection.4.3.2}%
+\contentsline {chapter}{\numberline {5}Conclusion and Recommendations}{23}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Contributions}{23}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Recommendations and Future Work}{23}{section.5.2}%
+\contentsline {chapter}{\bf REFERENCES}{25}{section*.26}%
+\contentsline {chapter}{\bf APPENDICES}{26}{section*.27}%
+\contentsline {section}{\bf {APPENDIX A: LSTM MODEL IMPLEMENTATION}}{27}{section*.28}%
+\setcounter {tocdepth}{-5}
+\contentsline {chapter}{\numberline {A}LSTM MODEL IMPLEMENTATION}{27}{appendix.A}%
+\setcounter {tocdepth}{2}
+\contentsline {section}{\bf {APPENDIX B: FEATURE ENGINEERING}}{28}{section*.29}%
+\setcounter {tocdepth}{-5}
+\contentsline {chapter}{\numberline {B}FEATURE ENGINEERING}{28}{appendix.B}%
+\setcounter {tocdepth}{2}

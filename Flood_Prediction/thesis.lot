@@ -1,0 +1,11 @@
+\textbf {Tables}\hfill \textbf {Page}\par 
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {1.1}{\ignorespaces Project Motivation and Rationale}}{3}{table.caption.10}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Overall Performance Comparison. The LSTM model achieves the lowest error rates across all metrics.}}{17}{table.caption.17}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Feature Ablation Study Results. Removing lag features causes the largest increase in error, followed by river discharge and weather features.}}{17}{table.caption.19}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

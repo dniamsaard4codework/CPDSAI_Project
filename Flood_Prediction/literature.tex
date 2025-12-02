@@ -1,0 +1,24 @@
+\setlength{\footskip}{8mm}
+
+\chapter{Literature Review}
+\label{ch:literature-review}
+
+\section{Flood Prediction and Warning Systems}
+
+The \textbf{Hydro-Informatics Institute (HII)} of Thailand developed comprehensive flood prediction and warning systems for urban areas in 2020. Their work established foundational frameworks for integrating hydrological models with real-time monitoring systems, enabling more effective flood management across Thai cities. This research demonstrated the importance of combining multiple data sources for improved prediction accuracy \cite{hii2024flood}.
+
+\section{AI-Based Flood Monitoring}
+
+\textbf{One More Link (2025)} introduced CCTV AI-based smart flood monitoring and early warning systems. This innovative approach uses computer vision and artificial intelligence to detect flood conditions from camera feeds, providing real-time alerts. Their work highlights the potential of AI technologies for automated flood detection and complements our water level prediction approach by providing visual verification of predictions \cite{onemorelink2025cctv}.
+
+\section{Global Early Warning Systems}
+
+The \textbf{World Meteorological Organization (WMO)} leads global efforts in developing comprehensive Early Warning Systems through their "Early Warnings for All" initiative. This framework emphasizes multi-hazard early warning, risk knowledge, monitoring and forecasting services, and communication systems. Our project aligns with WMO's recommended approaches by integrating meteorological data with hydrological measurements for improved forecast accuracy \cite{wmo2024ews}.
+
+\section{Machine Learning for Water Level Forecasting}
+
+\textbf{Fu et al. (2024)} demonstrated the effectiveness of combining machine learning with Ensemble Kalman Filtering for water level forecasting in Taiwan's Danshui River System. Their research showed that hybrid approaches combining data-driven ML models with statistical filtering techniques can achieve superior performance compared to standalone methods. This work informed our decision to compare multiple ML approaches including ensemble methods (XGBoost, LightGBM) and deep learning (LSTM) \cite{fu2024water}.
+
+\section{Synthesis and Gaps}
+
+While existing systems like HII's rely heavily on physical models or manual monitoring, and others like One More Link focus on visual detection, there is a gap in localized, data-driven predictive modeling that provides sufficient lead time (24 hours) for evacuation. Our work addresses this by developing a station-specific LSTM model that integrates multi-source data (water level, weather, discharge) to provide accurate, continuous future water level predictions with explicit risk classifications.

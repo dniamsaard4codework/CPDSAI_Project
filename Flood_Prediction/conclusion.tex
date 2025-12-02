@@ -1,0 +1,26 @@
+\setlength{\footskip}{8mm}
+
+\chapter{Conclusion and Recommendations}
+\label{ch:conclusion}
+
+\section{Contributions}
+\begin{itemize}
+    \item 1. Using hydrological, meteorological, and temporal variables to train and evaluate water level forecasting models; benchmarking numerous machine learning models and conventional baselines.
+    \item 2. Water-level prediction using an end-to-end, fully deep learning LSTM pipeline that deals with the requirement for complicated hydrodynamic models, like those found in nationwide forecasting systems.
+    \item 3. A feature ablation analysis that measures the importance of each feature group supports a comprehensive feature set including lags, rolling statistics, difference features, and cycling encoding.
+    \item 4. Reliable real-world behavior is ensured by an effective time-aware evaluation and advanced error analysis to measure performance under various temporal circumstances.
+    \item 5. Risk-level categorization system that improves interpretability by mapping predictions into flood risk classifications based on bank and bed reference levels.
+    \item 6. Ready for production: a useful tool for monitoring and prediction with live weather data, dynamic diagrams, and automated 24-hour forecasts.
+    \item 7. \textbf{Weather Impact Analysis:} Demonstrated that incorporating meteorological variables (rainfall, pressure, humidity) improves prediction accuracy by \textbf{24\%}, serving as critical leading indicators for water level changes.
+\end{itemize}
+
+\section{Recommendations and Future Work}
+
+Future work will focus on several key areas to enhance the system's capabilities:
+\begin{itemize}
+    \item \textbf{Models:} Explore Transformer architectures and ensemble methods to further improve accuracy.
+    \item \textbf{Data:} Integrate upstream station data and real-time weather forecasts instead of historical data.
+    \item \textbf{Horizons:} Develop multi-horizon forecasting capabilities (6h, 12h, 24h, 48h, 72h).
+    \item \textbf{Deployment:} Implement cloud deployment with automated retraining pipelines.
+    \item \textbf{Uncertainty:} Incorporate probabilistic predictions with confidence intervals to better inform decision-making.
+\end{itemize}

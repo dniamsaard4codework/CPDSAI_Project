@@ -1,0 +1,70 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: thesis.aux
+The style file: apacite.bst
+A level-1 auxiliary file: cover.aux
+A level-1 auxiliary file: declaration.aux
+A level-1 auxiliary file: acknowledgements.aux
+A level-1 auxiliary file: abstract.aux
+A level-1 auxiliary file: contents.aux
+A level-1 auxiliary file: loft.aux
+A level-1 auxiliary file: introduction.aux
+A level-1 auxiliary file: literature.aux
+A level-1 auxiliary file: methodology.aux
+A level-1 auxiliary file: results.aux
+A level-1 auxiliary file: conclusion.aux
+A level-1 auxiliary file: appendix.aux
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: references.bib
+apacite.bst [2013/07/21 v6.03 APA bibliography style]
+Warning--`others' not consistent with 6th ed. of the APA Manual
+You've used 9 entries,
+            6951 wiz_defined-function locations,
+            1327 strings with 12162 characters,
+and the built_in function-call counts, 13675 in all, are:
+= -- 1633
+> -- 95
+< -- 629
++ -- 545
+- -- 37
+* -- 842
+:= -- 2571
+add.period$ -- 38
+call.type$ -- 9
+change.case$ -- 122
+chr.to.int$ -- 0
+cite$ -- 18
+duplicate$ -- 288
+empty$ -- 653
+format.name$ -- 136
+if$ -- 2667
+int.to.chr$ -- 0
+int.to.str$ -- 31
+missing$ -- 0
+newline$ -- 226
+num.names$ -- 72
+pop$ -- 578
+preamble$ -- 1
+purify$ -- 41
+quote$ -- 0
+skip$ -- 653
+stack$ -- 0
+substring$ -- 586
+swap$ -- 152
+text.length$ -- 32
+text.prefix$ -- 0
+top$ -- 1
+type$ -- 720
+warning$ -- 1
+while$ -- 52
+width$ -- 0
+write$ -- 246
+(There was 1 warning)

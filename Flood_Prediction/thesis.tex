@@ -1,0 +1,63 @@
+\documentclass{aitthesis}
+\usepackage{amsmath,amssymb}
+
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage[justification=centering]{caption}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup[figure]{labelsep=colon, justification=centering}
+
+% This command enforces the "Figure X: Caption" single-line format and centering
+% This command enforces the "Figure X: Caption" single-line format and centering
+\captionsetup{format=plain, labelsep=colon, justification=centering}
+\captionsetup[table]{labelsep=colon, justification=centering}
+
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=flexible,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  showstringspaces=false
+}
+
+\bibliographystyle{apacite}
+
+\begin{document}
+
+\pagenumbering{roman}
+\addtocontents{toc}{~\hfill\textbf{Page}\par} %This adds the word Page on top of the table of content
+
+\include{cover}
+\include{declaration}
+\include{acknowledgements}
+\include{abstract}
+\include{contents}
+\include{loft}
+
+\pagestyle{plain}
+\pagenumbering{arabic}
+
+\include{introduction}
+\include{literature}
+\include{methodology}
+\include{results}
+\include{conclusion}
+
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\bf REFERENCES}
+\bibliography{references}
+
+\newpage\pagestyle{plain}
+
+\include{appendix}
+
+
+\end{document}

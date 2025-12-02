@@ -1,0 +1,226 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Fu%
+\ \protect \BOthers {.}}{%
+Fu%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2024}}%
+}]{%
+fu2024water}
+\APACinsertmetastar {%
+fu2024water}%
+\begin{APACrefauthors}%
+Fu, Y\BHBI C.%
+\BCBT {}\ \BOthersPeriod {.}
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2024}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Water Level Forecasting Combining Machine Learning and Ensemble Kalman Filtering in the Danshui River System, Taiwan} {Water level forecasting combining machine learning and ensemble kalman filtering in the danshui river system, taiwan}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Water}{16}{23}{3530}.
+\newblock
+\begin{APACrefURL} \url{https://www.mdpi.com/2073-4441/16/23/3530} \end{APACrefURL}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{Hydro-Informatics Institute}%
+}{%
+{Hydro-Informatics Institute}%
+}{%
+{\protect \APACyear {{\protect \bibnodate {}}}}%
+{\protect \APACexlab {{\protect \BCntND {1}}}}}]{%
+hiiwaterlevel}
+\APACinsertmetastar {%
+hiiwaterlevel}%
+\begin{APACrefauthors}%
+{Hydro-Informatics Institute}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{{\protect \bibnodate {}}{\protect \BCntND {1}}}{}{}.
+\newblock
+\APACrefbtitle {Water Level Dataset.} {Water level dataset.}
+\newblock
+\begin{APACrefURL} \url{https://data.hii.or.th/dataset/waterlevel} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online; accessed 2025]}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{Hydro-Informatics Institute}%
+}{%
+{Hydro-Informatics Institute}%
+}{%
+{\protect \APACyear {{\protect \bibnodate {}}}}%
+{\protect \APACexlab {{\protect \BCntND {2}}}}}]{%
+thaiwater_wl}
+\APACinsertmetastar {%
+thaiwater_wl}%
+\begin{APACrefauthors}%
+{Hydro-Informatics Institute}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{{\protect \bibnodate {}}{\protect \BCntND {2}}}{}{}.
+\newblock
+\APACrefbtitle {Water Level Monitoring System.} {Water level monitoring system.}
+\newblock
+\APAChowpublished {ThaiWater}.
+\newblock
+\begin{APACrefURL} \url{https://www.thaiwater.net/water/wl} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online; accessed 2025]}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{Hydro-Informatics Institute}%
+}{%
+{Hydro-Informatics Institute}%
+}{%
+{\protect \APACyear {2024}}%
+}]{%
+hii2024flood}
+\APACinsertmetastar {%
+hii2024flood}%
+\begin{APACrefauthors}%
+{Hydro-Informatics Institute}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2024}{February}{}.
+\newblock
+\APACrefbtitle {2020: Development of Flood Prediction and Warning Systems in Urban Areas.} {2020: Development of flood prediction and warning systems in urban areas.}
+\newblock
+\APAChowpublished {Hydro-Informatics Institute (HII)}.
+\newblock
+\begin{APACrefURL} \url{https://www.hii.or.th/en/research-development/project-highlights/2024/02/08/2020-development-of-flood-prediction-and-warning-systems-in-urban-areas/} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online]}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{One More Link}%
+}{%
+{One More Link}%
+}{%
+{\protect \APACyear {2025}}%
+}]{%
+onemorelink2025cctv}
+\APACinsertmetastar {%
+onemorelink2025cctv}%
+\begin{APACrefauthors}%
+{One More Link}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2025}{March}{}.
+\newblock
+\APACrefbtitle {Introducing CCTV AI: Smart Flood Monitoring \& Early Warning System.} {Introducing cctv ai: Smart flood monitoring \& early warning system.}
+\newblock
+\begin{APACrefURL} \url{https://onemorelink.co.th/en/introducing-cctv-ai-smart-flood-monitoring-early-warning-system/} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online]}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{Open-Meteo}%
+}{%
+{Open-Meteo}%
+}{%
+{\protect \APACyear {{\protect \bibnodate {}}}}%
+}]{%
+openmeteo}
+\APACinsertmetastar {%
+openmeteo}%
+\begin{APACrefauthors}%
+{Open-Meteo}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{{\protect \bibnodate {}}}{}{}.
+\newblock
+\APACrefbtitle {Weather \& Climate {APIs}.} {Weather \& climate {APIs}.}
+\newblock
+\begin{APACrefURL} \url{https://open-meteo.com} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online; accessed 2025]}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{The Nation}%
+}{%
+{The Nation}%
+}{%
+{\protect \APACyear {2024}}%
+}]{%
+thenation2024ongoing}
+\APACinsertmetastar {%
+thenation2024ongoing}%
+\begin{APACrefauthors}%
+{The Nation}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2024}{September}{}.
+\newblock
+\APACrefbtitle {Ongoing floods have affected more than 150,000 families.} {Ongoing floods have affected more than 150,000 families.}
+\newblock
+\APAChowpublished {The Nation Thailand}.
+\newblock
+\begin{APACrefURL} \url{https://www.nationthailand.com/news/general/40041677} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online]}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{World Meteorological Organization}%
+}{%
+{World Meteorological Organization}%
+}{%
+{\protect \APACyear {2024}}%
+}]{%
+wmo2024ews}
+\APACinsertmetastar {%
+wmo2024ews}%
+\begin{APACrefauthors}%
+{World Meteorological Organization}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2024}{September}{}.
+\newblock
+\APACrefbtitle {Early Warning Systems for Floods ({EWS-F}).} {Early warning systems for floods ({EWS-F}).}
+\newblock
+\begin{APACrefURL} \url{https://wmo.int/activities/projects/projectportfolio/early-warning-systems-floods-ews-f} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online]}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{World Meteorological Organization}%
+}{%
+{World Meteorological Organization}%
+}{%
+{\protect \APACyear {2025}}%
+}]{%
+wmo2025floods}
+\APACinsertmetastar {%
+wmo2025floods}%
+\begin{APACrefauthors}%
+{World Meteorological Organization}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2025}{}{}.
+\newblock
+\APACrefbtitle {Floods.} {Floods.}
+\newblock
+\begin{APACrefURL} \url{https://wmo.int/topics/floods} \end{APACrefURL}
+\newblock
+\APACrefnote{[Online]}
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}

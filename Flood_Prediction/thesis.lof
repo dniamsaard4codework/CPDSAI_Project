@@ -1,0 +1,21 @@
+\textbf {Figures}\hfill \textbf {Page}\par 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces 2011 Thailand's Flood.}}{2}{figure.caption.8}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Impact of Thailand’s flood in 2025.}}{2}{figure.caption.9}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Water Level Time Series (2019-2025).}}{9}{figure.caption.11}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Correlation Matrix of hydrological and meteorological variables.}}{10}{figure.caption.12}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Pair Plot illustrating non-linear feature interactions.}}{11}{figure.caption.13}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Water Level Distribution stratified by Risk Zones.}}{11}{figure.caption.14}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Bar chart comparison of model performance}}{16}{figure.caption.18}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Feature Ablation Study Results showing the impact of removing specific feature groups on MAE.}}{18}{figure.caption.20}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Feature Importance Plot.}}{18}{figure.caption.21}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Error Distribution Analysis.}}{19}{figure.caption.22}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Predicted vs Actual Water Levels (LSTM Model).}}{20}{figure.caption.23}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces LSTM Model Training Dynamics.}}{20}{figure.caption.24}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces User Interface of the Water Level Monitoring Application.}}{21}{figure.caption.25}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
